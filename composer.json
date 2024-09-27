@@ -1,0 +1,17 @@
+{
+    "name": "rowen/oopproject2",
+    "autoload": {
+        "psr-4": {
+            "Oop2\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ROWEN-BAK",
+            "email": "9018934@student.zadkine.nl"
+        }
+    ],
+    "require": {
+        "smarty/smarty": "^5.3"
+    }
+}
