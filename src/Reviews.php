@@ -23,7 +23,7 @@ class Reviews
     public function filterReviewsByPark(Park $park): array
     {
         return array_filter($this->reviews, function (Review $review) use ($park) {
-            // Controleer of de review is gelinked aan het juiste park met een array_filter
+            // Controleerd of de review is gelinked aan het juiste park met een array_filter
             return $review->park->name === $park->name;
         });
     }

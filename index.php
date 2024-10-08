@@ -48,7 +48,7 @@ switch($action)
         $reviews->addReview(new Review(4.5, "Een echt thrillcapital! Geweldige achtbanen!", $walibi));
 
         // Filter de reviews op basis van het park (thx jason)
-        $selectedPark = ($parkName === 'Efteling') ? $efteling : $walibi;
+        $selectedPark = ($parkName === 'Efteling') ? $efteling : $walibi; // als de parknaam Efteling is worden de geselecteerde reviews aan $efteling geassigned, zoniet worden ze aan $walibi geassigned
         $reviewlist = $reviews->filterReviewsByPark($selectedPark);
 
         $template->assign('reviews', $reviewlist);
