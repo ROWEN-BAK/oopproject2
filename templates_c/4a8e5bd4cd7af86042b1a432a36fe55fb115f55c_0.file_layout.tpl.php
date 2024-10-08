@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.3.1, created on 2024-10-08 12:07:27
+/* Smarty version 5.3.1, created on 2024-10-08 13:02:24
   from 'file:layout.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.3.1',
-  'unifunc' => 'content_6705045f977fb8_56893250',
+  'unifunc' => 'content_67051140907178_96401598',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '4a8e5bd4cd7af86042b1a432a36fe55fb115f55c' => 
     array (
       0 => 'layout.tpl',
-      1 => 1728044621,
+      1 => 1728385131,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_6705045f977fb8_56893250 (\Smarty\Template $_smarty_tpl) {
+function content_67051140907178_96401598 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\oopproject2\\templates';
 $_smarty_tpl->getInheritance()->init($_smarty_tpl, false);
 ?>
@@ -34,7 +34,7 @@ $_smarty_tpl->getInheritance()->init($_smarty_tpl, false);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
-
+<!--Basic site layout gemaakt met bootstrap-->
 <body>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -61,7 +61,7 @@ $_smarty_tpl->getInheritance()->init($_smarty_tpl, false);
 <br>
 <div class="container">
     <?php 
-$_smarty_tpl->getInheritance()->instanceBlock($_smarty_tpl, 'Block_8868562106705045f975f94_06372496', "content");
+$_smarty_tpl->getInheritance()->instanceBlock($_smarty_tpl, 'Block_28915894467051140906841_36830520', "content");
 ?>
 
 </div>
@@ -76,7 +76,7 @@ $_smarty_tpl->getInheritance()->instanceBlock($_smarty_tpl, 'Block_8868562106705
 </html>
 <?php }
 /* {block "content"} */
-class Block_8868562106705045f975f94_06372496 extends \Smarty\Runtime\Block
+class Block_28915894467051140906841_36830520 extends \Smarty\Runtime\Block
 {
 public function callBlock(\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\oopproject2\\templates';
