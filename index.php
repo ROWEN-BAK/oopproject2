@@ -48,14 +48,14 @@ switch($action)
             $_SESSION['reviews'] = [];
         }
 
+        // $reviews array en het ophalen van de huidige userinput reviews van de session.
         $reviews = new Reviews();
-
-        // Laad de opgeslagen reviews uit de session
         foreach ($_SESSION['reviews'] as $userReview) {
             $reviews->addReview(new Review($userReview['rating'], $userReview['description'], $userReview['park']));
         }
 
-        // Normale OOP reviews (normale input)
+
+        // Normale OOP reviews die worden opgeslagen in de $reviews array (normale input)
         $reviews->addReview(new Review(5, "Fantastisch park!", $efteling));
         $reviews->addReview(new Review(4.7, "Heerlijke sfeer!", $efteling));
         $reviews->addReview(new Review(5, "Geweldig park! Kan niet wachten om weer terug te komen!", $walibi));
