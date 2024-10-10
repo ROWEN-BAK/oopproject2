@@ -1,8 +1,7 @@
 {extends file="layout.tpl"}
 {block name="content"}
-    <!--Reviews worden hier met een foreach op het scherm getoond, Reviews zijn wel gefiltered op het park. Code is bijna hetzelfde als de showparks foreach-->
+    <!-- Reviews foreach -->
     <h1>Reviews voor {$park->name}</h1>
-    <p>Hier komen reviews te staan voor {$park->name} die door onze Park-Proffesionals zijn geschreven en gepubliceerd. Deze reviews zijn zeer accuraat en met deze reviews kunt u het beste uw bezoek aan {$park->name} voorspellen!</p>
     {foreach from=$reviews item=review}
         <div class="card" style="width: 50%">
             <div class="card-body">
@@ -12,5 +11,21 @@
         </div>
         <br>
     {/foreach}
-    <a href="./index.php?action=showParks" class="btn btn-primary">Klik hier om terug te gaan naar de lijst met parken!</a>
+
+    <!-- Review user input form -->
+    <h2>Voeg jouw review toe!</h2>
+    <p>P.S. Hou alstublieft uw reviews netjes. Wij willen niet dat er onnodige en onzinnige rare reviews op onze website komen te staan.</p>
+    <form action="./index.php?action=parkreviews&park={$park->name}" method="POST">
+        <div class="mb-3">
+            <label for="rating" class="form-label">Beoordeling (1-5)</label>
+            <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Beschrijving</label>
+            <input class="form-control" id="description" name="description" required></input>
+        </div>
+        <button type="submit" name="submit_form" class="btn btn-primary">Verzend Review</button>
+    </form>
+<br>
+    <a href="./index.php?action=showParks" class="btn btn-primary">Klik hier om weer terug te gaan naar de lijst met parken!</a>
 {/block}
