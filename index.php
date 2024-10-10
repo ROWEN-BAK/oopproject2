@@ -65,7 +65,7 @@ switch($action)
         $selectedPark = ($parkName === 'Efteling') ? $efteling : $walibi;
         $reviewlist = $reviews->filterReviewsByPark($selectedPark);
 
-        // Data van de form ophalen met een isset
+        // Data van de form ophalen met een isset POST
         if (isset($_POST['submit_form'])) {
             $rating = $_POST['rating'];
             $description = $_POST['description'];
