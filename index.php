@@ -15,60 +15,54 @@ $template->clearCompiledTemplate();
 $template->clearAllCache();
 
 $action = $_GET['action'] ?? null;
-$efteling = new Park("Efteling", "Een geweldig en indrukwekkend park!");
-$walibi = new Park("Walibi", "Het 'Thrillcapital' van Nederland!");
 
-// functie buiten de case om reviews van de sessie in te laden.
-function loadReviewsForPark(Park $park, string $parkName)
-{
-    if (!isset($_SESSION['reviews'])) {
-        $_SESSION['reviews'] = [];
-    }
-
-    foreach ($_SESSION['reviews'] as $userReview) {
-        if ($userReview['park'] === $parkName) {
-            $park->addReview(new Review($userReview['rating'], $userReview['description']));
-        }
-    }
+// Parks objecten aanmaken
+if (!isset($_SESSION['parks'])) {
+    // If statement als de parken nog niet bestaan, zodat ze worden toegevoegd.
+    $efteling = new Park("Efteling", "Een geweldig en indrukwekkend park!");
+    $walibi = new Park("Walibi", "Het 'Thrillcapital' van Nederland!");
+// Hieronder staat de Parks array die ik uit de showParks case heb gehaald en het ipv dat het globaal hier heb neergezet
+    //Array wordt aangemaakt en de parken worden eraan toegevoegd.
+    $parks = new Parks();
+    $parks->addPark($efteling);
+    $parks->addPark($walibi);
+    $_SESSION['parks'] = $parks;
+} else {
+    // Haal de bestaande parken uit de sessie
+    $parks = $_SESSION['parks'];
 }
-
 
 switch ($action) {
     case "showParks":
-        $parks = new Parks();
-        $parks->addPark($efteling);
-        $parks->addPark($walibi);
-
         $template->assign('parks', $parks->getParks());
         $template->display('showpark.tpl');
         break;
 
     case "parkreviews":
-        $parkName = $_GET['park'] ?? null; // parknaam ophalen van de url van showparks
+        $parkName = $_GET['park'] ?? null;
 
-    // $selectedPark krijgt of $efteling of $walibi aangewezen op basis van de $parkName. Dit wordt met een match gedaan
-        $selectedPark = match ($parkName) {
-            'Efteling' => $efteling,
-            'Walibi' => $walibi,
-        };
+        $selectedPark = $parks->filterPark($parkName); // Filter
 
-        //functie om de reviews in te laden voor een specifiek park
-        loadReviewsForPark($selectedPark, $parkName);
+        $selectedPark->loadReviews(); // Load reviews staat nu in de Park object.
 
+        // Review verwerken en toevoegen in een array en de sessie
         if (isset($_POST['submit_form'])) {
-            $newReview = new Review($_POST['rating'], $_POST['description']);
+            $rating = $_POST['rating'];
+            $description = $_POST['description'];
+            $newReview = new Review($rating, $description);
             $selectedPark->addReview($newReview);
+
             $_SESSION['reviews'][] = [
-                'rating' => $_POST['rating'],
-                'description' => $_POST['description'],
-                'park' => $_POST['park']
+                'rating' => $rating,
+                'description' => $description,
+                'park' => $parkName
             ];
 
             header("Location: ./index.php?action=parkreviews&park=" . $parkName);
             exit();
         }
 
-        $template->assign('reviews', $selectedPark->getReviews()); // Park wordt geassigned met de reviews getter en de "selectedpark"
+        $template->assign('reviews', $selectedPark->reviews->getReviews());
         $template->assign('park', $selectedPark);
         $template->display('parkreviews.tpl');
         break;
