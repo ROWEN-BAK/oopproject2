@@ -1,5 +1,4 @@
 <?php
-// basic smarty & composer dingen.
 require_once "vendor/autoload.php";
 
 use Smarty\Smarty;
@@ -16,88 +15,69 @@ $template->clearCompiledTemplate();
 $template->clearAllCache();
 
 $action = $_GET['action'] ?? null;
+$efteling = new Park("Efteling", "Een geweldig en indrukwekkend park!");
+$walibi = new Park("Walibi", "Het 'Thrillcapital' van Nederland!");
 
-switch($action)
+// functie buiten de case om reviews van de sessie in te laden.
+function loadReviewsForPark(Park $park, string $parkName)
 {
-    case "showParks":
-        // Voorbeeldparken toevoegen met een beschrijving, in dit geval doe ik de Efteling en Walibi
-        $efteling = new Park("Efteling", "Een geweldig en indrukwekkend park!");
-        $walibi = new Park("Walibi", "Het 'Thrillcapital' van Nederland!");
+    if (!isset($_SESSION['reviews'])) {
+        $_SESSION['reviews'] = [];
+    }
 
+    foreach ($_SESSION['reviews'] as $userReview) {
+        if ($userReview['park'] === $parkName) {
+            $park->addReview(new Review($userReview['rating'], $userReview['description']));
+        }
+    }
+}
+
+
+switch ($action) {
+    case "showParks":
         $parks = new Parks();
         $parks->addPark($efteling);
         $parks->addPark($walibi);
 
-        // array getter
-        $parklist = $parks->getParks();
-
-        //assigns
-        $template->assign('parks', $parklist);
+        $template->assign('parks', $parks->getParks());
         $template->display('showpark.tpl');
         break;
 
     case "parkreviews":
-        $parkName = $_GET['park'] ?? null; //GET om de url van het park te krijgen
+        $parkName = $_GET['park'] ?? null; // parknaam ophalen van de url van showparks
 
-        // 2 Voorbeeldparken
-        $efteling = new Park("Efteling", "Een geweldig en indrukwekkend park!");
-        $walibi = new Park("Walibi", "Het 'Thrillcapital' van Nederland!");
+    // $selectedPark krijgt of $efteling of $walibi aangewezen op basis van de $parkName. Dit wordt met een match gedaan
+        $selectedPark = match ($parkName) {
+            'Efteling' => $efteling,
+            'Walibi' => $walibi,
+        };
 
-        // Initializeer de reviews in de sessie (als ze nog niet bestaan dan)
-        if (!isset($_SESSION['reviews'])) {
-            $_SESSION['reviews'] = [];
-        }
+        //functie om de reviews in te laden voor een specifiek park
+        loadReviewsForPark($selectedPark, $parkName);
 
-        // $reviews array en het ophalen van de huidige userinput reviews van de session.
-        $reviews = new Reviews();
-        foreach ($_SESSION['reviews'] as $userReview) {
-            $reviews->addReview(new Review($userReview['rating'], $userReview['description'], $userReview['park']));
-        }
-
-
-        // Normale OOP reviews die worden opgeslagen in de $reviews array (normale input)
-        $reviews->addReview(new Review(5, "Fantastisch park!", $efteling));
-        $reviews->addReview(new Review(4.7, "Heerlijke sfeer!", $efteling));
-        $reviews->addReview(new Review(5, "Geweldig park! Kan niet wachten om weer terug te komen!", $walibi));
-        $reviews->addReview(new Review(4.5, "Een echt thrillcapital! Geweldige achtbanen!", $walibi));
-
-        // Filter de reviews op basis van het park
-        $selectedPark = ($parkName === 'Efteling') ? $efteling : $walibi;
-        $reviewlist = $reviews->filterReviewsByPark($selectedPark);
-
-        // Data van de form ophalen met een isset POST
         if (isset($_POST['submit_form'])) {
-            $rating = $_POST['rating'];
-            $description = $_POST['description'];
-            $newReview = new Review($rating, $description, $selectedPark);
-            $reviews->addReview($newReview);
-
-            // Review opslaan in de session
+            $newReview = new Review($_POST['rating'], $_POST['description']);
+            $selectedPark->addReview($newReview);
             $_SESSION['reviews'][] = [
-                'rating' => $rating,
-                'description' => $description,
-                'park' => $selectedPark
+                'rating' => $_POST['rating'],
+                'description' => $_POST['description'],
+                'park' => $_POST['park']
             ];
 
-            //header om ervoor te zorgen dat de review zich niet telkens opnieuw plaatst in de website
             header("Location: ./index.php?action=parkreviews&park=" . $parkName);
             exit();
         }
 
-
-        $template->assign('reviews', $reviewlist);
+        $template->assign('reviews', $selectedPark->getReviews()); // Park wordt geassigned met de reviews getter en de "selectedpark"
         $template->assign('park', $selectedPark);
         $template->display('parkreviews.tpl');
         break;
 
-
-
-
-    case "userreviews": //userreviews case die nog niet af is, omdat het een deel van het dB gedeelte wordt
+    case "userreviews":
         $template->display("userreviews.tpl");
         break;
 
-    default: //default tpl
+    default:
         $template->display('home.tpl');
         break;
 }

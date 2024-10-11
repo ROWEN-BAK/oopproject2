@@ -6,11 +6,10 @@ class Reviews
 {
     private array $reviews = [];
 
-
-    // Array add functie
-    public function addReview(Review $review): void
+    // Voeg deze functie toe
+    public function addReview(Review $review)
     {
-        $this->reviews[] = $review;
+        $this->reviews[] = $review; // Voeg de review toe aan de array
     }
 
     // Getter
@@ -18,13 +17,6 @@ class Reviews
     {
         return $this->reviews;
     }
-
-    // Functie om reviews te filteren op basis van een park ( thx jason )
-    public function filterReviewsByPark(Park $park): array
-    {
-        return array_filter($this->reviews, function (Review $review) use ($park) {
-            // Controleerd of de review is gelinked aan het juiste park met een array_filter
-            return $review->park->name === $park->name;
-        });
-    }
 }
+
+

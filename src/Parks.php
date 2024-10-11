@@ -4,18 +4,16 @@ namespace Oop2;
 
 class Parks
 {
-    public Park $park;
+    public array $parks = [];
 
-    // Add Functie
-    public function addPark(Park $park): void
+    public function addPark(Park $park)
     {
         $this->parks[] = $park;
     }
 
-
-    // Getter
     public function getParks(): array
     {
         return $this->parks;
     }
 }
+
