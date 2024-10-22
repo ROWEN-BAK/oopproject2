@@ -8,7 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
-<!--Basic site layout gemaakt met bootstrap-->
 <body>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -29,9 +28,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="./index.php?action=userreviews">User Reviews</a>
                 </li>
+                {if $isLoggedIn}
+                    <li class="nav-item">
+                        <a class="nav-link" href="./index.php?action=logout">Logout</a>
+                    </li>
+                {else}
+                    <li class="nav-item">
+                        <a class="nav-link" href="./index.php?action=loginForm">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./index.php?action=register">Registreren</a>
+                    </li>
+                {/if}
+            </ul>
         </div>
     </div>
 </nav>
+
 <br>
 <div class="container">
     {block name="content"}
@@ -43,5 +56,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
 </body>
-
 </html>

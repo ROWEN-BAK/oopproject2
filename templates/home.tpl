@@ -1,6 +1,11 @@
 {extends file="layout.tpl"}
 {block name="content"}
-<h1>Welkom op Park Reviews & CO!</h1>
+    <h1>Welkom op Park Reviews & CO!</h1>
+    {if $isLoggedIn}
+        <p>Welkom, {$username}!</p>
+    {/if}
+
+
     <br>
     <div class="card" style="width: 60%;">
         <div class="card-body">
@@ -9,5 +14,6 @@
             <a href="./index.php?action=showParks" class="btn btn-primary d-flex justify-content-center">Bekijk hier onze reviews!</a>
         </div>
     </div>
-
 {/block}
+
+
