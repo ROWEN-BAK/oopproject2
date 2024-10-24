@@ -8,6 +8,8 @@ use Oop2\Review;
 use Oop2\Reviews;
 use Oop2\db;
 use Oop2\User;
+use Oop2\Userreview;
+use Oop2\userPark;
 
 $db = new db();
 
@@ -25,32 +27,33 @@ if (isset($_SESSION['user'])) {
     $template->assign('username', $_SESSION['user']);
 }
 
-// Parks objecten aanmaken
-if (!isset($_SESSION['parks'])) {
-    // If statement als de parken nog niet bestaan, zodat ze worden toegevoegd.
+if (!isset($_SESSION['parks1'])) {
+    // Initialize parks if they don't exist
     $efteling = new Park("Efteling", "Een geweldig en indrukwekkend park!");
     $walibi = new Park("Walibi", "Het 'Thrillcapital' van Nederland!");
-// Hieronder staat de Parks array die ik uit de showParks case heb gehaald en het ipv dat het globaal hier heb neergezet
-    //Array wordt aangemaakt en de parken worden eraan toegevoegd.
-    $parks = new Parks();
-    $parks->addPark($efteling);
-    $parks->addPark($walibi);
-    $_SESSION['parks'] = $parks;
+
+    // Create a new Parks instance and add the parks
+    $parks1 = new Parks();
+    $parks1->addPark($efteling);
+    $parks1->addPark($walibi);
+
+    // Store the Parks object in the session
+    $_SESSION['parks1'] = $parks1;
 } else {
-    // Haal de bestaande parken uit de sessie
-    $parks = $_SESSION['parks'];
+    // Retrieve the existing Parks object from the session
+    $parks1 = $_SESSION['parks1'];
 }
 
 switch ($action) {
     case "showParks":
-        $template->assign('parks', $parks->getParks());
+        $template->assign('parks1', $parks1->getParks());
         $template->display('showpark.tpl');
         break;
 
     case "parkreviews":
         $parkName = $_GET['park'] ?? null;
 
-        $selectedPark = $parks->filterPark($parkName); // Filter
+        $selectedPark = $parks1->filterPark($parkName); // Filter
 
         $selectedPark->loadReviews(); // Load reviews staat nu in de Park object.
 
@@ -76,8 +79,73 @@ switch ($action) {
         $template->display('parkreviews.tpl');
         break;
 
-    case "userreviews":
-        $template->display("userreviews.tpl");
+    case 'userreviews':
+        $userReviews = UserReview::getAllReviews();
+
+        // Fetch park names from the 'park' table
+        $userparks = db::$db->select(['park' => ['name']], []);
+
+        $template->assign('userreviews', $userReviews);
+        $template->assign('userparks', $userparks); // Assign parks for the dropdown
+        $template->display('userreviews.tpl');
+        break;
+
+    case 'parkForm':
+        // Display the park form
+        $template->display('parkForm.tpl');
+        break;
+
+    case "submitPark":
+        // Handle park submission
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $parkName = $_POST['parkName'];
+
+            // Check if the park already exists
+            $existingPark = userPark::getParkByName($parkName);
+            if ($existingPark) {
+                $error = "Dit park bestaat al."; // Error message for park already existing
+            } else {
+                $parkData = [
+                    'name' => $parkName
+                ];
+
+                // Add the park to the database
+                if (userPark::createPark($parkData)) {
+                    // Park successfully added
+                    header("Location: index.php?action=userreviews"); // Redirect to the parks page
+                    exit();
+                } else {
+                    $error = "Er is een fout opgetreden tijdens het toevoegen van het park."; // General error message
+                }
+            }
+        }
+
+        $template->assign('error', $error ?? null);
+        $template->display('parkForm.tpl');
+        break;
+
+
+    case 'submitReview':
+        if (!empty($_POST['parkname']) && !empty($_POST['rating']) && !empty($_POST['reviewcontext'])) {
+            // Assuming user is logged in and their username is stored in the session
+            $username = $_SESSION['user'];
+
+            // Sanitize input
+            $parkname = $_POST['parkname'];
+            $rating = $_POST['rating'];
+            $reviewcontext = $_POST['reviewcontext'];
+
+            // Create and save the review
+            UserReview::createReview($username, $parkname, $rating, $reviewcontext);
+
+            // Redirect back to user reviews page after submission
+            header("Location: index.php?action=userreviews");
+            exit();
+        } else {
+            // Handle form validation error
+            $template->assign('formError', 'Please fill in all fields.');
+            $template->display('userreviews.tpl');
+        }
         break;
 
     case "register":
@@ -176,4 +244,4 @@ switch ($action) {
         break;
 }
 
-$_SESSION['parks'] = $parks;
+$_SESSION['parks1'] = $parks1;
