@@ -29,7 +29,7 @@
         <form method="POST" action="">
             <div class="mb-3">
                 <label for="newPassword" class="form-label">Nieuw Wachtwoord</label>
-                <input type="password" class="form-control" name="newPassword" id="newPassword" required>
+                <input type="password" class="form-control" name="newPassword" id="newPassword" required maxlength="500">
             </div>
             <button type="submit" name="changePassword" class="btn btn-primary">Verander Wachtwoord</button>
         </form>
