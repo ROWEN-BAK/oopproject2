@@ -30,6 +30,9 @@
                 </li>
                 {if $isLoggedIn}
                     <li class="nav-item">
+                        <a class="nav-link" href="./index.php?action=profile">Profiel</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="./index.php?action=logout">Logout</a>
                     </li>
                 {else}

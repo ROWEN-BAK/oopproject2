@@ -6,15 +6,15 @@ class User
 {
     public string $username;
     private string $email;
-    private string $password; // Optional, if you store the password
+    private string $password;
 
     public function __construct($username = '', $email = '', $password = '') {
         $this->username = $username;
         $this->email = $email;
-        $this->password = $password; // Initialize if needed
+        $this->password = $password;
     }
 
-    public static function register(array $userData): bool
+    public static function register(array $userData): bool // register functie
     {
         if (!isset($userData['username'], $userData['email'], $userData['password'])) {
             return false;
@@ -41,19 +41,19 @@ class User
         return $this->email;
     }
 
-    public static function getUserByEmail(string $email): ?array
+    public static function getUserByEmail(string $email): ?array // Functie om user te vinden met gebruik van een email
     {
         $result = db::$db->select(['user' => ['id', 'username', 'email', 'password']], ['user.email' => $email]);
 
         if (!empty($result)) {
-            return $result[0]; // Return the first user found
+            return $result[0];
         }
 
-        return null; // Return null if no user found
+        return null;
     }
 
 
-    public static function getUserByUsername(string $username): ?array
+    public static function getUserByUsername(string $username): ?array // Functie om user te vinden met gebruik van een gebruikersnaam
     {
         $result = db::$db->select(['user' => ['id', 'username', 'email', 'password']], ['user.username' => $username]);
 
@@ -63,6 +63,19 @@ class User
 
         return null;
     }
+
+    public static function changePassword(string $username, string $newPassword): bool
+    {
+        // Hash the new password before storing it
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        // Attempt to update the user's password in the database
+        $affectedRows = db::$db->update('user', ['password' => $hashedPassword], ['username' => $username]);
+
+        // Return true if rows were affected, false otherwise
+        return $affectedRows > 0;
+    }
+
 
 
 }

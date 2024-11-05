@@ -39,7 +39,7 @@
                     <div class="card" style="width: 50%">
                         <div class="card-body">
                             <h2 class="card-title">Gebruiker: {$review->user}</h2>
-                            <p class="card-text">Park: {$review->parkname}</p>
+                            <h5 class="card-text">Park: {$review->parkname}</h5>
                             <p class="card-text">Beoordeling: {$review->rating}/5</p>
                             <p class="card-text">"{$review->reviewcontext}"</p>
                         </div>

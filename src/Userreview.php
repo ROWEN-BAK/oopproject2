@@ -19,6 +19,37 @@ class Userreview
         $this->reviewcontext = $reviewcontext;
     }
 
+    public static function getPostsByUser($username): array
+    {
+        return db::$db->select(
+            ['userreview' => ['id', 'parkname', 'rating', 'reviewcontext']],
+            ['user' => $username]
+        );
+    }
+
+    public static function getUserPosts($username) {
+        return db::$db->select(
+            ['userreview' => ['id', 'parkname', 'rating', 'reviewcontext']],
+            ['user' => $username]
+        );
+    }
+    public static function getReviewsByUsername(string $username): array
+    {
+        $reviews = db::$db->select(
+            ['userreview' => ['id', 'user', 'parkname', 'rating', 'reviewcontext']],
+            ['user' => $username] // Filter by the specified username
+        );
+
+        return $reviews; // Return the array of reviews for the specific user
+    }
+
+    public static function deletePost(int $id): bool
+    {
+        $result = db::$db->delete('userreview', ['id' => $id]);
+
+        return $result > 0;
+    }
+
     public static function getAllReviews(): array
     {
         $reviews = db::$db->select(
@@ -36,7 +67,7 @@ class Userreview
         }, $reviews);
     }
 
-    // Create a new review
+   // Review aanmaken
     public static function createReview($user, $parkname, $rating, $reviewcontext)
     {
         db::$db->insert(

@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.3.1, created on 2024-10-24 16:06:43
+/* Smarty version 5.3.1, created on 2024-11-05 10:50:03
   from 'file:layout.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.3.1',
-  'unifunc' => 'content_671a5473475ec4_62700839',
+  'unifunc' => 'content_6729ea4bc63031_92086617',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '4a8e5bd4cd7af86042b1a432a36fe55fb115f55c' => 
     array (
       0 => 'layout.tpl',
-      1 => 1729601667,
+      1 => 1729855670,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_671a5473475ec4_62700839 (\Smarty\Template $_smarty_tpl) {
+function content_6729ea4bc63031_92086617 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\oopproject2\\templates';
 $_smarty_tpl->getInheritance()->init($_smarty_tpl, false);
 ?>
@@ -56,6 +56,9 @@ $_smarty_tpl->getInheritance()->init($_smarty_tpl, false);
                 </li>
                 <?php if ($_smarty_tpl->getValue('isLoggedIn')) {?>
                     <li class="nav-item">
+                        <a class="nav-link" href="./index.php?action=profile">Profiel</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="./index.php?action=logout">Logout</a>
                     </li>
                 <?php } else { ?>
@@ -74,7 +77,7 @@ $_smarty_tpl->getInheritance()->init($_smarty_tpl, false);
 <br>
 <div class="container">
     <?php 
-$_smarty_tpl->getInheritance()->instanceBlock($_smarty_tpl, 'Block_1800751446671a54734757a7_97710458', "content");
+$_smarty_tpl->getInheritance()->instanceBlock($_smarty_tpl, 'Block_13958237926729ea4bc629a4_15770745', "content");
 ?>
 
 </div>
@@ -88,7 +91,7 @@ $_smarty_tpl->getInheritance()->instanceBlock($_smarty_tpl, 'Block_1800751446671
 </html>
 <?php }
 /* {block "content"} */
-class Block_1800751446671a54734757a7_97710458 extends \Smarty\Runtime\Block
+class Block_13958237926729ea4bc629a4_15770745 extends \Smarty\Runtime\Block
 {
 public function callBlock(\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\oopproject2\\templates';

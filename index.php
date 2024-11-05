@@ -80,9 +80,10 @@ switch ($action) {
         break;
 
     case 'userreviews':
-        $userReviews = UserReview::getAllReviews();
+        // Reviews ophalen uit de database met een functie
+        $userReviews = Userreview::getAllReviews();
 
-        // Fetch park names from the 'park' table
+        //Parken van de DB ophalen
         $userparks = db::$db->select(['park' => ['name']], []);
 
         $template->assign('userreviews', $userReviews);
@@ -91,31 +92,36 @@ switch ($action) {
         break;
 
     case 'parkForm':
-        // Display the park form
+        if (!isset($_SESSION['user'])) {
+            header("Location: ./index.php?action=loginForm"); // Redirect als je niet ingelogd bent
+            exit();
+        }
         $template->display('parkForm.tpl');
         break;
 
     case "submitPark":
-        // Handle park submission
+        if (!isset($_SESSION['user'])) {
+            header("Location: ./index.php?action=loginForm"); // Redirect als je niet ingelogd bent
+            exit();
+        }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $parkName = $_POST['parkName'];
 
-            // Check if the park already exists
+            // Checken of het park al bestaat
             $existingPark = userPark::getParkByName($parkName);
             if ($existingPark) {
-                $error = "Dit park bestaat al."; // Error message for park already existing
+                $error = "Dit park bestaat al. Voer A.U.B. een ander park in.";
             } else {
                 $parkData = [
                     'name' => $parkName
                 ];
 
-                // Add the park to the database
+                // Voeg park toe aan de database
                 if (userPark::createPark($parkData)) {
-                    // Park successfully added
-                    header("Location: index.php?action=userreviews"); // Redirect to the parks page
+                    header("Location: index.php?action=userreviews");
                     exit();
                 } else {
-                    $error = "Er is een fout opgetreden tijdens het toevoegen van het park."; // General error message
+                    $error = "Er is een fout opgetreden tijdens het toevoegen van het park.";
                 }
             }
         }
@@ -127,47 +133,41 @@ switch ($action) {
 
     case 'submitReview':
         if (!empty($_POST['parkname']) && !empty($_POST['rating']) && !empty($_POST['reviewcontext'])) {
-            // Assuming user is logged in and their username is stored in the session
-            $username = $_SESSION['user'];
-
-            // Sanitize input
+            $username = $_SESSION['user']; // User staat automatisch in het form
             $parkname = $_POST['parkname'];
             $rating = $_POST['rating'];
             $reviewcontext = $_POST['reviewcontext'];
 
-            // Create and save the review
+            // Review aanmaken en opslaan in de DB
             UserReview::createReview($username, $parkname, $rating, $reviewcontext);
 
-            // Redirect back to user reviews page after submission
             header("Location: index.php?action=userreviews");
             exit();
         } else {
-            // Handle form validation error
-            $template->assign('formError', 'Please fill in all fields.');
+            $template->assign('formError', 'Vul a.u.b. alle velden in.');
             $template->display('userreviews.tpl');
         }
         break;
 
     case "register":
         if (isset($_SESSION['user'])) {
-            header("Location: ./index.php"); // Redirect to home if logged in
+            header("Location: ./index.php"); // Redirect als je al ingelogd ben
             exit();
         }
-        // Handle user registration
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'];
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            // Check if the username already exists
+
             $existingUser = User::getUserByUsername($username);
             if ($existingUser) {
-                $error = "Deze gebruikersnaam is al in gebruik.";
+                $error = "Deze gebruikersnaam is al in gebruik."; // Error als gebruikersnaam al is geregistreerd
             } else {
-                // Check if the email already exists
                 $existingEmail = User::getUserByEmail($email);
                 if ($existingEmail) {
-                    $error = "Dit emailadres is al geregistreerd."; // New error message for email
+                    $error = "Dit emailadres is al geregistreerd."; // Error als email al is geregistreerd
                 } else {
                     $userData = [
                         'username' => $username,
@@ -175,10 +175,9 @@ switch ($action) {
                         'password' => $password
                     ];
 
-                    // Register the user
+
                     if (User::register($userData)) {
-                        // Registration successful
-                        header("Location: index.php?action=login"); // Redirect to login page
+                        header("Location: index.php?action=login"); // redirect naar home als de login succesvol is
                         exit();
                     } else {
                         $error = "Er is een fout opgetreden tijdens registratie.";
@@ -191,51 +190,75 @@ switch ($action) {
         $template->display('register.tpl');
         break;
 
-    case "loginForm":
+    case "loginForm": // Login form
         if (isset($_SESSION['user'])) {
-            header("Location: ./index.php"); // Redirect to home if logged in
+            header("Location: ./index.php"); // Redirect als je al ingelogd ben
             exit();
         }
-        $template->display('login.tpl'); // Just display the login form
+        $template->display('login.tpl');
         break;
 
-    case "login":
+    case "login": // login
         if (!empty($_POST["username"]) && !empty($_POST['password'])) {
-            // Create a User object
             $user = new User();
 
-            // Get user data based on username
             $userData = $user->getUserByUsername($_POST["username"]);
 
-            // Check if user data is retrieved
             if ($userData) {
-                // Use password_verify for password checking if passwords are hashed
-                if (password_verify($_POST['password'], $userData['password'])) {
-                    // Set session variable for user
+                if (password_verify($_POST['password'], $userData['password'])) { // Wachtwoord verifieren
+                    // Session aanwijzen
                     $_SESSION["user"] = $userData['username'];
 
-                    // Redirect to homepage
                     header("Location: index.php");
                     exit();
                 } else {
-                    $template->assign("loginError", "Username or password is incorrect");
+                    $template->assign("loginError", "Gebruikersnaam of wachtwoord is incorrect");
                 }
             } else {
-                $template->assign("loginError", "Username or password is incorrect");
+                $template->assign("loginError", "Gebruikersnaam of wachtwoord is incorrect");
             }
         } else {
-            $template->assign("loginError", "Please fill in all fields");
+            $template->assign("loginError", "Log hier in.");
         }
-
-        // Display the login template
         $template->display('login.tpl');
         break;
 
 
 
-    case "logout":
-        session_destroy(); // Destroy the session to log out the user
-        header("Location: ./index.php"); // Redirect to the home page
+    case "logout": // logout
+        session_destroy();
+        header("Location: ./index.php");
+        exit();
+
+    case 'profile':
+        if (!isset($_SESSION['user'])) {
+            header("Location: ./index.php?action=loginForm");
+            exit();
+        }
+
+        $username = $_SESSION['user'];
+        $userDetails = User::getUserByUsername($username);
+        $userReviews = Userreview::getReviewsByUsername($username);
+
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['changePassword'])) {
+            $newPassword = $_POST['newPassword'];
+            User::changePassword($username, $newPassword);
+            $message = "Wachtwoord succesvol veranderd.";
+            $template->assign('message', $message);
+        }
+
+        $template->assign('userDetails', $userDetails);
+        $template->assign('userReviews', $userReviews);
+        $template->display('profile.tpl');
+        break;
+
+    case 'deletePost':
+        if (isset($_GET['id'])) {
+            $postId = (int)$_GET['id'];
+            Userreview::deletePost($postId);
+        }
+        header("Location: ./index.php?action=profile");
         exit();
 
 
