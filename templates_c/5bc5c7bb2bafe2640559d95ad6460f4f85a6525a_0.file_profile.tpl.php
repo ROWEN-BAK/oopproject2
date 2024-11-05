@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.3.1, created on 2024-11-05 10:50:03
+/* Smarty version 5.3.1, created on 2024-11-05 11:24:38
   from 'file:profile.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.3.1',
-  'unifunc' => 'content_6729ea4bb3e167_35081456',
+  'unifunc' => 'content_6729f2667d5681_13028833',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '5bc5c7bb2bafe2640559d95ad6460f4f85a6525a' => 
     array (
       0 => 'profile.tpl',
-      1 => 1730800195,
+      1 => 1730802277,
       2 => 'file',
     ),
   ),
@@ -20,20 +20,20 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_6729ea4bb3e167_35081456 (\Smarty\Template $_smarty_tpl) {
+function content_6729f2667d5681_13028833 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\oopproject2\\templates';
 $_smarty_tpl->getInheritance()->init($_smarty_tpl, true);
 ?>
 
 
 <?php 
-$_smarty_tpl->getInheritance()->instanceBlock($_smarty_tpl, 'Block_7469283666729ea4bb28060_19328774', "content");
+$_smarty_tpl->getInheritance()->instanceBlock($_smarty_tpl, 'Block_14584604966729f2667c59a9_07077196', "content");
 ?>
 
 <?php $_smarty_tpl->getInheritance()->endChild($_smarty_tpl, "layout.tpl", $_smarty_current_dir);
 }
 /* {block "content"} */
-class Block_7469283666729ea4bb28060_19328774 extends \Smarty\Runtime\Block
+class Block_14584604966729f2667c59a9_07077196 extends \Smarty\Runtime\Block
 {
 public function callBlock(\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\oopproject2\\templates';
@@ -43,6 +43,8 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\oopproject2\\templates';
         <h1>Profiel van <?php echo $_smarty_tpl->getValue('userDetails')['username'];?>
 </h1>
         <p><strong>Email:</strong> <?php echo $_smarty_tpl->getValue('userDetails')['email'];?>
+</p>
+        <p><strong>Gebruikersnaam:</strong> <?php echo $_smarty_tpl->getValue('userDetails')['username'];?>
 </p>
 
         <h2>Jouw reviews</h2>
@@ -60,7 +62,7 @@ $foreach0DoElse = false;
 </h5>
                         <p>"<?php echo $_smarty_tpl->getValue('review')['reviewcontext'];?>
 "</p>
-                        <a href="./index.php?action=deletePost&id=<?php echo $_smarty_tpl->getValue('review')['id'];?>
+                        <a href="./index.php?action=profile&deletePost=<?php echo $_smarty_tpl->getValue('review')['id'];?>
 " class="btn btn-danger">Verwijder Review</a>
                     </li>
                     <br>

@@ -224,24 +224,29 @@ switch ($action) {
         break;
 
 
-
     case "logout": // logout
         session_destroy();
         header("Location: ./index.php");
         exit();
 
-    case 'profile':
+    case 'profile': //profiel case
         if (!isset($_SESSION['user'])) {
             header("Location: ./index.php?action=loginForm");
             exit();
         }
 
-        $username = $_SESSION['user'];
+        $username = $_SESSION['user']; // User data ophalen, met hulp van de gebruikersnaam
         $userDetails = User::getUserByUsername($username);
         $userReviews = Userreview::getReviewsByUsername($username);
 
-        
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['changePassword'])) {
+        if (isset($_GET['deletePost'])) { // Post verwijderen
+            $postId = (int)$_GET['deletePost'];
+            Userreview::deletePost($postId);
+            header("Location: ./index.php?action=profile");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['changePassword'])) { // Wachtwoord veranderen
             $newPassword = $_POST['newPassword'];
             User::changePassword($username, $newPassword);
             $message = "Wachtwoord succesvol veranderd.";
@@ -252,14 +257,6 @@ switch ($action) {
         $template->assign('userReviews', $userReviews);
         $template->display('profile.tpl');
         break;
-
-    case 'deletePost':
-        if (isset($_GET['id'])) {
-            $postId = (int)$_GET['id'];
-            Userreview::deletePost($postId);
-        }
-        header("Location: ./index.php?action=profile");
-        exit();
 
 
     default:

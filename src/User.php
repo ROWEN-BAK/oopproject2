@@ -66,13 +66,8 @@ class User
 
     public static function changePassword(string $username, string $newPassword): bool
     {
-        // Hash the new password before storing it
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
-        // Attempt to update the user's password in the database
         $affectedRows = db::$db->update('user', ['password' => $hashedPassword], ['username' => $username]);
-
-        // Return true if rows were affected, false otherwise
         return $affectedRows > 0;
     }
 
