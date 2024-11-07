@@ -64,7 +64,7 @@ class User
         return null;
     }
 
-    public static function changePassword(string $username, string $newPassword): bool
+    public static function changePassword(string $username, string $newPassword): bool //ww verander functie
     {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $affectedRows = db::$db->update('user', ['password' => $hashedPassword], ['username' => $username]);

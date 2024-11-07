@@ -37,20 +37,20 @@ class Userreview
     {
         $reviews = db::$db->select(
             ['userreview' => ['id', 'user', 'parkname', 'rating', 'reviewcontext']],
-            ['user' => $username] // Filter by the specified username
+            ['user' => $username] // Filter Parken met gebruik van de gebruikersnaam
         );
 
-        return $reviews; // Return the array of reviews for the specific user
+        return $reviews;
     }
 
-    public static function deletePost(int $id): bool
+    public static function deletePost(int $id): bool // Post verwijder functie
     {
         $result = db::$db->delete('userreview', ['id' => $id]);
 
         return $result > 0;
     }
 
-    public static function getAllReviews(): array
+    public static function getAllReviews(): array // Alle reviews ophalen in een array
     {
         $reviews = db::$db->select(
             ['userreview' => ['id', 'user', 'parkname', 'rating', 'reviewcontext']],
