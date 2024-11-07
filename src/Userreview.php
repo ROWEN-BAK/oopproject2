@@ -19,20 +19,6 @@ class Userreview
         $this->reviewcontext = $reviewcontext;
     }
 
-    public static function getPostsByUser($username): array
-    {
-        return db::$db->select(
-            ['userreview' => ['id', 'parkname', 'rating', 'reviewcontext']],
-            ['user' => $username]
-        );
-    }
-
-    public static function getUserPosts($username) {
-        return db::$db->select(
-            ['userreview' => ['id', 'parkname', 'rating', 'reviewcontext']],
-            ['user' => $username]
-        );
-    }
     public static function getReviewsByUsername(string $username): array
     {
         $reviews = db::$db->select(

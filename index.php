@@ -225,7 +225,7 @@ switch ($action) {
 
 
     case "logout": // logout
-        session_destroy();
+        unset($_SESSION["user"]);
         header("Location: ./index.php");
         exit();
 
